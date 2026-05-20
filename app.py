@@ -1,7 +1,11 @@
-"""Fabric Application Studio — Streamlit entry, v2.1.
+"""The Fitting Room — Streamlit entry (formerly Fabric Application Studio).
 
 Run from project root with the venv active:
     .venv/bin/streamlit run app.py
+
+v2.4 (2026-05-20): renamed to "The Fitting Room" before public beta deploy.
+The metaphor — try a fabric on furniture, like trying clothes in a fitting
+room — is the same product, sharper handle.
 
 v2.1 changes (2026-05-18 Pranav feedback):
   - Removed per-application checkboxes. The only choice the user makes is
@@ -330,7 +334,7 @@ def render_gallery(
 
 def main() -> None:
     st.set_page_config(
-        page_title="Fabric Application Studio",
+        page_title="The Fitting Room",
         page_icon="·",
         layout="centered",
     )
@@ -338,11 +342,11 @@ def main() -> None:
 
     # ── Hero ───────────────────────────────────────────────────────────────
     st.markdown('<div class="eyebrow">D\'Decor · Brand Desk</div>', unsafe_allow_html=True)
-    st.markdown("# Fabric Application Studio")
+    st.markdown("# The Fitting Room")
     st.markdown(
-        '<div class="lede">Upload a fabric — a phone shot is enough — '
-        'and see it rendered onto chairs, sofas, and drapery, in '
-        'editorial photography.</div>',
+        '<div class="lede">Try a fabric on. Upload a phone shot and see '
+        'it rendered onto chairs, sofas, and drapery in editorial '
+        'photography.</div>',
         unsafe_allow_html=True,
     )
 
