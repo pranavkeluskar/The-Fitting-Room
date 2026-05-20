@@ -1,0 +1,20 @@
+# Fabric Application Studio — editorial theme.
+# Warm bone background, walnut accents, soft typography.
+# Most styling is in app.py's injected CSS; this file sets the base palette.
+
+[theme]
+base = "light"
+primaryColor = "#6B4F3A"           # walnut — primary buttons, accents
+backgroundColor = "#F8F4EE"        # warm bone — page background
+secondaryBackgroundColor = "#EFEAE0"  # limewash — cards, file uploader
+textColor = "#3A3633"              # warm dark grey — body text
+font = "serif"                     # body font default (overridden per-element via CSS)
+
+[server]
+# headless = true would suppress auto-opening the browser. We want it to
+# open in Safari when Pranav runs `streamlit run app.py` locally — so leave
+# headless unset (defaults to false, which auto-launches the browser).
+runOnSave = true
+
+[browser]
+gatherUsageStats = false
