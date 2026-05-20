@@ -83,29 +83,42 @@ _CSS = """
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: #3A3633;
 }
-.stApp h1, .stApp h2, .stApp h3, .stApp h4 {
+/* Custom heading classes — bulletproof against Streamlit DOM changes.
+   Streamlit's auto-upgraded versions wrap `# markdown` h1s in containers
+   our `.stApp h1` selector can't reach. Custom classes win. */
+.hero-title {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-weight: 500 !important;
+    font-size: 3.75rem !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.015em !important;
+    color: #1F1A17 !important;
+    margin: 0 0 0.5rem 0 !important;
+}
+.section-h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-weight: 500 !important;
+    font-size: 2.25rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.015em !important;
+    color: #1F1A17 !important;
+    margin: 3.5rem 0 1.25rem 0 !important;
+}
+.col-h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-weight: 500 !important;
+    font-size: 1.35rem !important;
+    letter-spacing: -0.01em !important;
+    color: #1F1A17 !important;
+    margin: 1.5rem 0 0.75rem 0 !important;
+}
+/* Fallback for any built-in Streamlit headings we don't catch with the above */
+.stApp h1, .stApp h2, .stApp h3, .stApp h4,
+[data-testid="stHeading"] h1, [data-testid="stHeading"] h2, [data-testid="stHeading"] h3 {
     font-family: 'Cormorant Garamond', Georgia, serif !important;
     font-weight: 500 !important;
     letter-spacing: -0.015em !important;
     color: #1F1A17 !important;
-}
-.stApp h1 {
-    font-size: 3.75rem !important;
-    line-height: 1.05 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0.5rem !important;
-    font-weight: 500 !important;
-}
-.stApp h2 {
-    font-size: 2.25rem !important;
-    margin-top: 3.5rem !important;
-    margin-bottom: 1.25rem !important;
-    font-weight: 500 !important;
-}
-.stApp h3 {
-    font-size: 1.35rem !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: 0.75rem !important;
 }
 
 .eyebrow {
@@ -127,32 +140,24 @@ _CSS = """
     line-height: 1.4;
 }
 
-/* File uploader */
+/* File uploader — keep the bone-coloured drop zone and walnut accents,
+   but DO NOT override the button text (newer Streamlit versions changed
+   the button label and our text-transform was overlapping their text). */
 [data-testid="stFileUploader"] section {
     background: #EFEAE0 !important;
     border: 1px dashed #B8A88E !important;
     border-radius: 0 !important;
     padding: 2.5rem 1.5rem !important;
 }
-[data-testid="stFileUploader"] section > div:first-child {
-    font-family: 'Inter', sans-serif !important;
-    color: #5A5048 !important;
-}
 [data-testid="stFileUploader"] section button {
     background: transparent !important;
     color: #6B4F3A !important;
     border: 1px solid #6B4F3A !important;
     border-radius: 0 !important;
-    padding: 0.55rem 1.5rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.1em !important;
-    font-size: 0.76rem !important;
-    font-weight: 500 !important;
     font-family: 'Inter', sans-serif !important;
 }
 [data-testid="stFileUploader"] small {
     color: #8A7E72 !important;
-    font-size: 0.68rem !important;
 }
 
 /* Pill-style radio (Use type selector) */
@@ -342,7 +347,7 @@ def main() -> None:
 
     # ── Hero ───────────────────────────────────────────────────────────────
     st.markdown('<div class="eyebrow">D\'Decor · Brand Desk</div>', unsafe_allow_html=True)
-    st.markdown("# The Fitting Room")
+    st.markdown('<h1 class="hero-title">The Fitting Room</h1>', unsafe_allow_html=True)
     st.markdown(
         '<div class="lede">Try a fabric on. Upload a phone shot and see '
         'it rendered onto chairs, sofas, and drapery in editorial '
@@ -377,7 +382,7 @@ def main() -> None:
     col_preview, col_picker = st.columns([1, 1.2], gap="large")
 
     with col_preview:
-        st.markdown("### Your fabric")
+        st.markdown('<h3 class="col-h3">Your fabric</h3>', unsafe_allow_html=True)
         # exif_transpose: iPhone JPEGs carry orientation in EXIF metadata
         # rather than rotating pixels. Without this the preview (and the
         # bytes Gemini sees) come out sideways for portrait shots.
@@ -387,7 +392,7 @@ def main() -> None:
         st.image(preview_img, use_container_width=True)
 
     with col_picker:
-        st.markdown("### Render onto")
+        st.markdown('<h3 class="col-h3">Render onto</h3>', unsafe_allow_html=True)
         use_type_label = st.radio(
             "Use type",
             options=["Upholstery", "Drapery", "Both"],
@@ -429,7 +434,7 @@ def main() -> None:
     if not (run or show_cached):
         return
 
-    st.markdown("## Mockups")
+    st.markdown('<h2 class="section-h2">Mockups</h2>', unsafe_allow_html=True)
 
     if show_cached:
         # All already rendered — show inline immediately, no progress UI.
