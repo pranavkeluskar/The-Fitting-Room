@@ -83,9 +83,10 @@ _CSS = """
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: #3A3633;
 }
-/* Custom heading classes — bulletproof against Streamlit DOM changes.
-   Streamlit's auto-upgraded versions wrap `# markdown` h1s in containers
-   our `.stApp h1` selector can't reach. Custom classes win. */
+/* Custom heading "divs" — Streamlit's newer markdown renderer injects
+   inline styles on real <h1>/<h2>/<h3> tags that override our CSS.
+   Using <div> with explicit class names sidesteps the override.
+   (We add role="heading" + aria-level in the HTML for accessibility.) */
 .hero-title {
     font-family: 'Cormorant Garamond', Georgia, serif !important;
     font-weight: 500 !important;
@@ -112,14 +113,6 @@ _CSS = """
     color: #1F1A17 !important;
     margin: 1.5rem 0 0.75rem 0 !important;
 }
-/* Fallback for any built-in Streamlit headings we don't catch with the above */
-.stApp h1, .stApp h2, .stApp h3, .stApp h4,
-[data-testid="stHeading"] h1, [data-testid="stHeading"] h2, [data-testid="stHeading"] h3 {
-    font-family: 'Cormorant Garamond', Georgia, serif !important;
-    font-weight: 500 !important;
-    letter-spacing: -0.015em !important;
-    color: #1F1A17 !important;
-}
 
 .eyebrow {
     text-transform: uppercase;
@@ -140,21 +133,16 @@ _CSS = """
     line-height: 1.4;
 }
 
-/* File uploader — keep the bone-coloured drop zone and walnut accents,
-   but DO NOT override the button text (newer Streamlit versions changed
-   the button label and our text-transform was overlapping their text). */
+/* File uploader — just style the dropzone container; leave the inner
+   button/icon/label alone. Newer Streamlit versions render the inner
+   widgets in ways our overrides clash with (duplicate text labels).
+   The bone-coloured drop zone with dashed walnut border is enough
+   editorial signal without fighting Streamlit's internal markup. */
 [data-testid="stFileUploader"] section {
     background: #EFEAE0 !important;
     border: 1px dashed #B8A88E !important;
     border-radius: 0 !important;
-    padding: 2.5rem 1.5rem !important;
-}
-[data-testid="stFileUploader"] section button {
-    background: transparent !important;
-    color: #6B4F3A !important;
-    border: 1px solid #6B4F3A !important;
-    border-radius: 0 !important;
-    font-family: 'Inter', sans-serif !important;
+    padding: 2rem 1.5rem !important;
 }
 [data-testid="stFileUploader"] small {
     color: #8A7E72 !important;
@@ -347,7 +335,10 @@ def main() -> None:
 
     # ── Hero ───────────────────────────────────────────────────────────────
     st.markdown('<div class="eyebrow">D\'Decor · Brand Desk</div>', unsafe_allow_html=True)
-    st.markdown('<h1 class="hero-title">The Fitting Room</h1>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="hero-title" role="heading" aria-level="1">The Fitting Room</div>',
+        unsafe_allow_html=True,
+    )
     st.markdown(
         '<div class="lede">Try a fabric on. Upload a phone shot and see '
         'it rendered onto chairs, sofas, and drapery in editorial '
@@ -382,7 +373,10 @@ def main() -> None:
     col_preview, col_picker = st.columns([1, 1.2], gap="large")
 
     with col_preview:
-        st.markdown('<h3 class="col-h3">Your fabric</h3>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="col-h3" role="heading" aria-level="3">Your fabric</div>',
+            unsafe_allow_html=True,
+        )
         # exif_transpose: iPhone JPEGs carry orientation in EXIF metadata
         # rather than rotating pixels. Without this the preview (and the
         # bytes Gemini sees) come out sideways for portrait shots.
@@ -392,7 +386,10 @@ def main() -> None:
         st.image(preview_img, use_container_width=True)
 
     with col_picker:
-        st.markdown('<h3 class="col-h3">Render onto</h3>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="col-h3" role="heading" aria-level="3">Render onto</div>',
+            unsafe_allow_html=True,
+        )
         use_type_label = st.radio(
             "Use type",
             options=["Upholstery", "Drapery", "Both"],
@@ -434,7 +431,10 @@ def main() -> None:
     if not (run or show_cached):
         return
 
-    st.markdown('<h2 class="section-h2">Mockups</h2>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-h2" role="heading" aria-level="2">Mockups</div>',
+        unsafe_allow_html=True,
+    )
 
     if show_cached:
         # All already rendered — show inline immediately, no progress UI.
