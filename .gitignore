@@ -27,3 +27,9 @@ outputs/
 
 # Streamlit local secrets (production secrets live in Streamlit Cloud UI)
 .streamlit/secrets.toml
+
+# Internal brand-strategy docs — kept on Pranav's laptop only, never pushed.
+# Claude Code still reads CLAUDE.md from the working tree on session start,
+# but it's not part of the deployed app.
+CLAUDE.md
+SPEC.md
